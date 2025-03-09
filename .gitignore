@@ -1,0 +1,72 @@
+# Build files
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.log
+*.so
+*.dylib
+*.swp
+
+# .NET dependencies
+*.deps.json
+*.runtimeconfig.json
+*.app
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.ide
+.vscode/
+.idea/
+*.csproj.user
+*.sln.docstates
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+# Entity Framework migrations
+Migrations/
+Database.mdf
+Database.ldf
+
+# Secrets
+secrets.json
+*.key
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Docker
+docker-compose.override.yml
+docker-compose.debug.yml
+*.dockerignore
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
