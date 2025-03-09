@@ -1,74 +1,30 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using TaskManagementAPI.Infrastructure;
+using TaskManagementAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplicationServices(builder.Configuration);
+// Add AWS service configurations
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
-// Add services to the container.
+// Add Cognito Identity services
+builder.Services.AddCognitoIdentity();
+
+// Add custom infrastructure services
+builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+// Add controllers
 builder.Services.AddControllers();
 
-// Add authentication using AWS Cognito
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = $"https://cognito-idp.{builder.Configuration["AWS:Region"]}.amazonaws.com/{builder.Configuration["AWS:UserPoolId"]}";
-        options.Audience = builder.Configuration["AWS:ClientId"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidIssuer = $"https://cognito-idp.{builder.Configuration["AWS:Region"]}.amazonaws.com/{builder.Configuration["AWS:UserPoolId"]}",
-            ValidAudience = builder.Configuration["AWS:ClientId"],
-            ValidateLifetime = true
-        };
-    });
-
-builder.Services.AddAuthorization();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
+// Configure authentication
+builder.Services.AddCognitoAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
-// Use authentication and authorization
-app.UseAuthentication();
-app.UseAuthorization();
-
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
+// Configure middleware
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthentication(); // Must be added before UseAuthorization()
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
 app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
