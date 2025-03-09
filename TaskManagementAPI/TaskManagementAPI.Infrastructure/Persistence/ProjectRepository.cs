@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagementAPI.Domain.Entities;
 using TaskManagementAPI.Domain.Interfaces;
+using TaskManagementAPI.Infrastructure.Persistence;
 
-namespace TaskManagementAPI.Infrastructure.Persistence
+namespace TaskManagementAPI.Infrastructure.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
@@ -15,17 +16,17 @@ namespace TaskManagementAPI.Infrastructure.Persistence
 
         public async Task<IEnumerable<Project>> GetAllProjectsAsync()
         {
-            return await _context.Projects.Include(p => p.Tasks).ToListAsync();
+            return await _context.Projects.ToListAsync();
         }
 
         public async Task<Project?> GetProjectByIdAsync(int id)
         {
-            return await _context.Projects.Include(p => p.Tasks).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Projects.FindAsync(id);
         }
 
         public async Task AddProjectAsync(Project project)
         {
-            _context.Projects.Add(project);
+            await _context.Projects.AddAsync(project);
             await _context.SaveChangesAsync();
         }
 

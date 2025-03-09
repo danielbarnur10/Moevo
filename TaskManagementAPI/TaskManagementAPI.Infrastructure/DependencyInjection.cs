@@ -4,6 +4,7 @@ using TaskManagementAPI.Application.Interfaces;
 using TaskManagementAPI.Application.Services;
 using TaskManagementAPI.Domain.Interfaces;
 using TaskManagementAPI.Infrastructure.Persistence;
+using TaskManagementAPI.Infrastructure.Repositories;
 
 namespace TaskManagementAPI.Infrastructure
 {

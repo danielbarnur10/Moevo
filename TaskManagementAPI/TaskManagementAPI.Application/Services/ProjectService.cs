@@ -1,3 +1,4 @@
+using AutoMapper;
 using TaskManagementAPI.Application.DTOs;
 using TaskManagementAPI.Application.Interfaces;
 using TaskManagementAPI.Domain.Entities;
@@ -8,10 +9,12 @@ namespace TaskManagementAPI.Application.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IMapper _mapper;
 
-        public ProjectService(IProjectRepository projectRepository)
+        public ProjectService(IProjectRepository projectRepository, IMapper mapper)
         {
             _projectRepository = projectRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Project>> GetAllProjectsAsync()
@@ -24,24 +27,21 @@ namespace TaskManagementAPI.Application.Services
             return await _projectRepository.GetProjectByIdAsync(id);
         }
 
-        public async Task AddProjectAsync(ProjectDTO projectDto)
+        public async Task<Project> AddProjectAsync(ProjectDTO projectDto)
         {
-            var project = new Project
-            {
-                Name = projectDto.Name,
-                Description = projectDto.Description
-            };
+            var project = _mapper.Map<Project>(projectDto);
             await _projectRepository.AddProjectAsync(project);
+            return project;
         }
 
         public async Task UpdateProjectAsync(int id, ProjectDTO projectDto)
         {
             var project = await _projectRepository.GetProjectByIdAsync(id);
-            if (project == null) return;
-
-            project.Name = projectDto.Name;
-            project.Description = projectDto.Description;
-
+            if (project == null)
+            {
+                throw new Exception("Project not found");
+            }
+            _mapper.Map(projectDto, project);
             await _projectRepository.UpdateProjectAsync(project);
         }
 

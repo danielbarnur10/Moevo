@@ -7,7 +7,7 @@ namespace TaskManagementAPI.Application.Interfaces
     {
         Task<IEnumerable<Project>> GetAllProjectsAsync();
         Task<Project?> GetProjectByIdAsync(int id);
-        Task AddProjectAsync(ProjectDTO projectDto);
+        Task<Project> AddProjectAsync(ProjectDTO projectDto);
         Task UpdateProjectAsync(int id, ProjectDTO projectDto);
         Task DeleteProjectAsync(int id);
     }
