@@ -10,9 +10,9 @@ namespace TaskManagementAPI
             IConfiguration configuration
         )
         {
-            var cognitoSettings = configuration.GetSection("AWS:Cognito");
+            var cognitoSettings = configuration.GetSection("AWS");
             var userPoolId = cognitoSettings["UserPoolId"];
-            var appClientId = cognitoSettings["AppClientId"];
+            var appClientId = cognitoSettings["ClientId"];
             var region = cognitoSettings["Region"];
 
             services

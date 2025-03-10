@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagementAPI.Application.Interfaces;
 using TaskManagementAPI.Application.Services;
 using TaskManagementAPI.Domain.Interfaces;
+using TaskManagementAPI.Infrastructure.Authentication;
 using TaskManagementAPI.Infrastructure.Persistence;
 using TaskManagementAPI.Infrastructure.Repositories;
 
@@ -19,6 +20,7 @@ namespace TaskManagementAPI.Infrastructure
             );
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IAuthService, AuthService>();
             return services;
         }
     }
