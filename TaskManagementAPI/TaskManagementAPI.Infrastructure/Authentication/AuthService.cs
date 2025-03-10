@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using System.Threading.Tasks;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
@@ -20,6 +21,7 @@ namespace TaskManagementAPI.Infrastructure.Authentication
             _cognitoClient = cognitoClient;
             _clientId = config["AWS:ClientId"];
             _userPoolId = config["AWS:UserPoolId"];
+
         }
 
         public async Task<string> RegisterAsync(RegisterDTO registerDto)
