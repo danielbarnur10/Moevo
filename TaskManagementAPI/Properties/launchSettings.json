@@ -8,11 +8,6 @@
       "applicationUrl": "http://localhost:5172",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AWS_ACCESS_KEY_ID": "AKIAWMFUO7JVL4TSVLKS",
-        "AWS_SECRET_ACCESS_KEY": "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",
-        "AWS_DEFAULT_REGION": "us-east-1",
-         "AWS_COGNITO_USER_POOL_ID": "us-east-1_tLdPUMvt7",
-        "AWS_COGNITO_CLIENT_ID": "6s4jk8juj1l46ur9nnu1tifhsd"
       }
     },
     "https": {
@@ -22,11 +17,6 @@
       "applicationUrl": "https://localhost:7052;http://localhost:5172",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AWS_ACCESS_KEY_ID": "AKIAWMFUO7JVL4TSVLKS",
-        "AWS_SECRET_ACCESS_KEY": "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",
-        "AWS_DEFAULT_REGION": "us-east-1",
-        "AWS_COGNITO_USER_POOL_ID": "us-east-1_tLdPUMvt7",
-        "AWS_COGNITO_CLIENT_ID": "6s4jk8juj1l46ur9nnu1tifhsd" 
            }
     }
   }

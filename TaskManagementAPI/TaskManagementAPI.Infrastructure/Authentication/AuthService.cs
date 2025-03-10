@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
@@ -10,59 +11,71 @@ namespace TaskManagementAPI.Infrastructure.Authentication
 {
     public class AuthService : IAuthService
     {
-        private readonly IAmazonCognitoIdentityProvider _cognitoProvider;
+        private readonly IAmazonCognitoIdentityProvider _cognitoClient;
+        private readonly string _clientId;
         private readonly string _userPoolId;
-        private readonly string _appClientId;
 
-        public AuthService(
-            IAmazonCognitoIdentityProvider cognitoProvider,
-            IConfiguration configuration
-        )
+        public AuthService(IAmazonCognitoIdentityProvider cognitoClient, IConfiguration config)
         {
-            _cognitoProvider = cognitoProvider;
-            var cognitoSettings = configuration.GetSection("AWS");
-            _userPoolId = cognitoSettings["UserPoolId"];
-            _appClientId = cognitoSettings["ClientId"];
+            _cognitoClient = cognitoClient;
+            _clientId = config["AWS:ClientId"];
+            _userPoolId = config["AWS:UserPoolId"];
         }
 
         public async Task<string> RegisterAsync(RegisterDTO registerDto)
         {
-            var request = new SignUpRequest
+            try
             {
-                ClientId = _appClientId,
-                Username = registerDto.Email,
-                Password = registerDto.Password,
-                UserAttributes = new List<AttributeType>
+                var signUpRequest = new SignUpRequest
                 {
-                    new AttributeType { Name = "email", Value = registerDto.Email },
-                },
-            };
+                    ClientId = _clientId,
+                    Username = registerDto.Email,
+                    Password = registerDto.Password,
+                    UserAttributes = new List<AttributeType>
+                    {
+                        new AttributeType { Name = "email", Value = registerDto.Email },
+                    },
+                };
 
-            var response = await _cognitoProvider.SignUpAsync(request);
-            return response.UserSub; // Cognito User ID
+                var response = await _cognitoClient.SignUpAsync(signUpRequest);
+
+                return response.UserSub; // Returns Cognito User ID
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Login failed: {ex.Message}");
+            }
         }
 
         public async Task<string> LoginAsync(LoginDTO loginDto)
         {
-            var request = new InitiateAuthRequest
+            try
             {
-                ClientId = _appClientId,
-                AuthFlow = AuthFlowType.USER_PASSWORD_AUTH,
-                AuthParameters = new Dictionary<string, string>
+                var authRequest = new InitiateAuthRequest
                 {
-                    { "USERNAME", loginDto.Email },
-                    { "PASSWORD", loginDto.Password },
-                },
-            };
+                    AuthFlow = AuthFlowType.USER_PASSWORD_AUTH,
+                    ClientId = _clientId,
+                    AuthParameters = new Dictionary<string, string>
+                    {
+                        { "USERNAME", loginDto.Email },
+                        { "PASSWORD", loginDto.Password },
+                    },
+                };
 
-            var response = await _cognitoProvider.InitiateAuthAsync(request);
-            return response.AuthenticationResult?.IdToken ?? string.Empty;
-        }
+                var authResponse = await _cognitoClient.InitiateAuthAsync(authRequest);
+                if (authResponse?.AuthenticationResult == null)
+                {
+                    // Throw an exception or handle it as a failed login
+                    throw new Exception("Authentication failed: No authentication result returned.");
+                }
+                var accessToken = authResponse.AuthenticationResult.AccessToken;
 
-        public async Task<bool> ValidateTokenAsync(string token)
-        {
-            // Token validation logic can go here
-            return true;
+                return accessToken; // Return JWT Token
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Login failed: {ex.Message}");
+            }
         }
     }
 }

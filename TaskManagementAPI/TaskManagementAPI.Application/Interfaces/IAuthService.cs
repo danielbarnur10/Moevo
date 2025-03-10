@@ -7,6 +7,5 @@ namespace TaskManagementAPI.Application.Interfaces
     {
         Task<string> RegisterAsync(RegisterDTO registerDto);
         Task<string> LoginAsync(LoginDTO loginDto);
-        Task<bool> ValidateTokenAsync(string token);
     }
 }

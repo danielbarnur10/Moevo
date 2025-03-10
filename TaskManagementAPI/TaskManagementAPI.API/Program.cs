@@ -1,20 +1,24 @@
 using TaskManagementAPI;
 using TaskManagementAPI.Infrastructure;
-using Amazon.CognitoIdentityProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("./appsettings.json", optional: false, reloadOnChange: true);
+// builder.Configuration.AddJsonFile("./appsettings.json", optional: false, reloadOnChange: true);
 
 // Add AWS service configurations
-var awsOptions = builder.Configuration.GetAWSOptions();
-builder.Services.AddDefaultAWSOptions(awsOptions);
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
+// Load AWS options from configuration
+var awsOptions = builder.Configuration.GetAWSOptions();
+Console.WriteLine($"Region from AWSOptions: {awsOptions.Region}"); // Debug line
+
+builder.Services.AddDefaultAWSOptions(awsOptions);
 // Add Cognito Identity services
 builder.Services.AddCognitoIdentity();
 
 // Add custom infrastructure services
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
+var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddInfrastructure(defaultConnection);
 
 // Add controllers
 builder.Services.AddControllers();

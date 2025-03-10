@@ -1,4 +1,3 @@
-using AutoMapper;
 using TaskManagementAPI.Application.DTOs;
 using TaskManagementAPI.Application.Interfaces;
 using TaskManagementAPI.Domain.Entities;

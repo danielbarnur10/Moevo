@@ -1,3 +1,4 @@
+using Amazon.CognitoIdentityProvider;
 using Microsoft.EntityFrameworkCore;
 using TaskManagementAPI.Application.Interfaces;
 using TaskManagementAPI.Application.Services;
@@ -20,6 +21,7 @@ namespace TaskManagementAPI.Infrastructure
             );
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddAWSService<IAmazonCognitoIdentityProvider>();
             services.AddScoped<IAuthService, AuthService>();
             return services;
         }
