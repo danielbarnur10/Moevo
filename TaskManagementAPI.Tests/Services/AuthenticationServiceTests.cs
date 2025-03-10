@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using TaskManagementAPI.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
+using AuthenticationService = TaskManagementAPI.Services.AuthenticationService;
 
 public class AuthenticationServiceTests
 {
@@ -16,7 +15,10 @@ public class AuthenticationServiceTests
     {
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
         _loggerMock = new Mock<ILogger<AuthenticationService>>();
-        _authService = new AuthenticationService(_httpContextAccessorMock.Object, _loggerMock.Object);
+        _authService = new AuthenticationService(
+            _httpContextAccessorMock.Object,
+            _loggerMock.Object
+        );
     }
 
     [Fact]
@@ -25,10 +27,10 @@ public class AuthenticationServiceTests
         // Arrange
         var httpContext = new DefaultHttpContext();
         httpContext.User = new System.Security.Claims.ClaimsPrincipal(
-            new System.Security.Claims.ClaimsIdentity(new[]
-            {
-                new System.Security.Claims.Claim("sub", "test-user-id")
-            }));
+            new System.Security.Claims.ClaimsIdentity(
+                new[] { new System.Security.Claims.Claim("sub", "test-user-id") }
+            )
+        );
 
         _httpContextAccessorMock.Setup(x => x.HttpContext).Returns(httpContext);
 

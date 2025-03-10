@@ -9,12 +9,10 @@ namespace TaskManagementAPI.Application.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
-        private readonly IMapper _mapper;
 
-        public ProjectService(IProjectRepository projectRepository, IMapper mapper)
+        public ProjectService(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
-            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Project>> GetAllProjectsAsync()
@@ -29,7 +27,11 @@ namespace TaskManagementAPI.Application.Services
 
         public async Task<Project> AddProjectAsync(ProjectDTO projectDto)
         {
-            var project = _mapper.Map<Project>(projectDto);
+            var project = new Project
+            {
+                Name = projectDto.Name,
+                Description = projectDto.Description,
+            };
             await _projectRepository.AddProjectAsync(project);
             return project;
         }
@@ -41,7 +43,8 @@ namespace TaskManagementAPI.Application.Services
             {
                 throw new Exception("Project not found");
             }
-            _mapper.Map(projectDto, project);
+            project.Name = projectDto.Name;
+            project.Description = projectDto.Description;
             await _projectRepository.UpdateProjectAsync(project);
         }
 

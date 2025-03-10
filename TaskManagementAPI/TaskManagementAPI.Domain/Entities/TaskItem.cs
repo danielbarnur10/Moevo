@@ -14,6 +14,6 @@ namespace TaskManagementAPI.Domain.Entities
     {
         Todo,
         InProgress,
-        Done
+        Done,
     }
 }

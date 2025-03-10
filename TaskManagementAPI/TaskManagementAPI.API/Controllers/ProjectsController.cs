@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagementAPI.Application.DTOs;
 using TaskManagementAPI.Application.Interfaces;
 using TaskManagementAPI.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace TaskManagementAPI.Controllers
 {
@@ -43,7 +41,11 @@ namespace TaskManagementAPI.Controllers
         public async Task<ActionResult<Project>> CreateProject(ProjectDTO projectDto)
         {
             var createdProject = await _projectService.AddProjectAsync(projectDto);
-            return CreatedAtAction(nameof(GetProject), new { id = createdProject.Id }, createdProject);
+            return CreatedAtAction(
+                nameof(GetProject),
+                new { id = createdProject.Id },
+                createdProject
+            );
         }
 
         // PUT: api/projects/{id}

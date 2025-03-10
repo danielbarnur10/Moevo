@@ -1,5 +1,5 @@
-using TaskManagementAPI.Infrastructure;
 using TaskManagementAPI;
+using TaskManagementAPI.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +10,9 @@ builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddCognitoIdentity();
 
 // Add custom infrastructure services
+#pragma warning disable CS8604 // Possible null reference argument.
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
+#pragma warning restore CS8604 // Possible null reference argument.
 
 // Add controllers
 builder.Services.AddControllers();
