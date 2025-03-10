@@ -1,5 +1,6 @@
 using TaskManagementAPI;
 using TaskManagementAPI.Infrastructure;
+using Amazon.CognitoIdentityProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 
