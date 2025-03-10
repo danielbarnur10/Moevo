@@ -3,8 +3,6 @@ using TaskManagementAPI.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Configuration.AddJsonFile("./appsettings.json", optional: false, reloadOnChange: true);
-
 // Add AWS service configurations
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
